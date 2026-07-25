@@ -1,0 +1,8 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;height:100%;overflow:hidden;background:#fff}canvas{display:block;width:100%;height:100%}</style></head><body><canvas id=c></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');function r(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;x.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}addEventListener('resize',r);r();
+const N=60,R=6,LW=2.6,RAD=4.5,n=[];for(let i=0;i<N;i++)n.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,p:0});
+addEventListener('mousemove',e=>{let b=n[0],d=1e9;for(let o of n){let q=(o.x-e.clientX)**2+(o.y-e.clientY)**2;if(q<d){d=q;b=o}}b.p=1});
+(function f(){x.clearRect(0,0,innerWidth,innerHeight);for(let o of n){o.x+=o.vx;o.y+=o.vy;if(o.x<R||o.x>innerWidth-R)o.vx*=-1;if(o.y<R||o.y>innerHeight-R)o.vy*=-1;o.p*=.985}
+for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){let a=n[i],b=n[j],d=Math.hypot(b.x-a.x,b.y-a.y);if(d<150){let A=(1-d/150)*.4+Math.max(a.p,b.p)*.6;x.strokeStyle=`rgba(21,92,136,${A})`;x.lineWidth=LW;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();if((a.p>.2||b.p>.2)&&Math.random()<.012){if(a.p>b.p)b.p=a.p*.92;else a.p=b.p*.92;}}}
+for(let o of n){x.beginPath();x.arc(o.x,o.y,RAD,0,7);x.fillStyle="#64A853";x.fill();x.lineWidth=LW;x.strokeStyle="#155C88";x.stroke();if(o.p>.02){x.beginPath();x.arc(o.x,o.y,RAD+4+10*(1-o.p),0,7);x.lineWidth=LW;x.strokeStyle=`rgba(21,92,136,${o.p*.6})`;x.stroke();}}
+requestAnimationFrame(f)})();</script></body></html>
