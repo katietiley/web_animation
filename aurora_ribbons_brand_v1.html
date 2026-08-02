@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#fff}
+canvas{display:block;width:100%;height:100%}
+</style></head>
+<body><canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d');
+function resize(){c.width=innerWidth*devicePixelRatio;c.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+addEventListener('resize',resize);resize();
+let t=0;
+const ribbons=[
+{y:.28,a:55,w:120,col:"rgba(21,92,136,0.18)",p:0},
+{y:.46,a:70,w:140,col:"rgba(100,168,83,0.18)",p:1.8},
+{y:.66,a:60,w:130,col:"rgba(21,92,136,0.12)",p:3.4},
+{y:.82,a:45,w:110,col:"rgba(100,168,83,0.14)",p:5.2}
+];
+function drawRibbon(r){
+ ctx.beginPath();
+ for(let x=0;x<=innerWidth;x+=8){
+   const yy=innerHeight*r.y+
+      Math.sin(x*0.004+t*0.35+r.p)*r.a+
+      Math.sin(x*0.0017-t*0.18+r.p)*r.a*0.45;
+   if(x===0)ctx.moveTo(x,yy); else ctx.lineTo(x,yy);
+ }
+ for(let x=innerWidth;x>=0;x-=8){
+   const yy=innerHeight*r.y+
+      Math.sin(x*0.004+t*0.35+r.p)*r.a+
+      Math.sin(x*0.0017-t*0.18+r.p)*r.a*0.45+r.w;
+   ctx.lineTo(x,yy);
+ }
+ ctx.closePath();
+ ctx.fillStyle=r.col;
+ ctx.fill();
+}
+(function anim(){
+ ctx.clearRect(0,0,innerWidth,innerHeight);
+ t+=0.01;
+ ribbons.forEach(drawRibbon);
+ requestAnimationFrame(anim);
+})();
+</script></body></html>
